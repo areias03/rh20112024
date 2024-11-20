@@ -1,0 +1,150 @@
+---
+title: "Development of microbial community simulation methods to characterize and analyze the effects of metal concentrations on pathogen silencing/promotion"
+subtitle: "Master's in Bioinformatics dissertation"
+institute: "Centre for Microbiome Research"
+author: Alexandre Areias Castro
+format:
+  metropolis-revealjs: default
+footer: Red Herons Group Meeting
+date: 11/20/2024
+date-format: "DD MMM, YYYY"
+logo: metropolis_template_images/cmr_logo.png
+execute: 
+  eval: true
+  echo: true
+slide-number: true
+embed-resources: true
+---
+
+## Introduction
+
+-   This work was developed as part of my Master's in Bioinformatics degree from Universidade do Minho in Braga, Portugal
+-   It was accomplished under the supervision of Vitor Manuel Sá Pereira from CEB - Universidade do Minho and Sarela Garcia Santamarina from IQTB - Nova University in Lisbon, Portugal
+-   Aimed to develop a novel methodology to the study of the effects of transition metals in gut microbial communities
+
+## Context
+
+-   Community settings are the natural occurring form of microbes
+-   The study of communities provide researchers with the knowledge of the effect of individuals/groups of individuals in community dynamics, resource availability and even diversity 
+-   Experimental approaches are insufficient in capturing the entirety of the interactions that occur in these complex biological systems
+-   The modelling of microbial communities through the use of genomic reconstructions is a widely used approach
+
+## The problem
+
+-   Community models created from non-enhanced GEMs are often unable to capture crucial microbe-microbe interactions as their innate inability to attain different flux distribution profiles often produces results that widely differ from those obtain in *in vitro* settings 
+-   Really strict measurements have to be taken into account when defining the growth media and community composition
+-   Even then, models often underperform as they do not present a growth that is remotely realistic in terms of real observations
+
+## The solution
+
+-   The combination of two approaches supported by experimental data for integration and comparison can shed new light on the community dynamics promoted through the behavior of individuals
+
+![](./metropolis_template_images/Untitled.png){fig-align='center' width=50% .lightbox}
+
+## Goals
+
+-   Develop an automated workflow to generate genome-scale metabolic models enhanced with enzymatic constraints
+-   Create compartmentalized community models for target communities
+-   Attain similar growth profiles as those observed *in vitro*
+-   Capture a experimentally observed "piggy-back" mechanism between *B. thetaiotaomicron VPI 5482* and *E. coli ED1a* ^[Zhu, Wenhan, et al. "Xenosiderophore utilization promotes Bacteroides thetaiotaomicron resilience during colitis." Cell host & microbe 27.3 (2020): 376-388.]
+
+![](metropolis_template_images/gem.gif){fig-align='center' width=40%}
+
+## Model obtention
+
+-   A  list of 7 models was obtained from the AGORA^[Heinken, A., Hertel, J., Acharya, G. et al. Genome-scale metabolic reconstruction of 7,302 human microorganisms for personalized medicine. Nat Biotechnol 41, 1320–1331 (2023). https://doi.org/10.1038/s41587-022-01628-0] database by matching against the provided list of strains.
+-   The models were *Bacteroides thetaiotaomicron* VPI 5482, *Bacteroides uniformis* ATCC 8492, *Escherichia coli* ED1a, *Fusobacterium nucleatum subsp. nucleatum* ATCC 25586, 
+*Roseburia intestinalis* L1 82, *Streptococcus parasanguinis* ATCC 15912 and *Streptococcus salivarius* DSM 20560 (Bt, Bu, Ec, Fn, Ri, Sp and Ss) 
+
+![](metropolis_template_images/model_obtention.png){fig-align='center' width=45% .lightbox}
+
+::: footer
+Methods
+:::
+
+## Enhancement of models with enzyme constraints
+
+-   Models were scraped for their annotations and then information was queried from various databases and k~cat~ values were also predicted using a deep-learning model
+-   A mapping of genes and reactions of each model was made and the due alterations to each reaction were made accordingly (change stoichiometry, splitting isozymes, converting to irreversible)
+
+![](metropolis_template_images/EC_Implem.png){fig-align='center' .lightbox}
+
+::: footer
+Methods
+:::
+
+## Simulation methods
+
+-   **FBA - Flux Balance Analysis:** Direct extension of Flux Balance Analysis (or joint FBA) that integrates metabolic reconstructions of individual microbial species into a multi-compartment model with a community compartment allowing for the exchange of metabolites between species. The optimization objective function is usually the sum of the biomass reactions of individual species (called the community biomass).
+-   **SteadyCom:** Community simulation method that takes extends the capabilities of FBA by taking into account the fact that to reach a stable composition the organisms need to grow at the same specific growth rate (1/h), which means that the absolute growth rate (gDW/h) of each organism is proportional to its abundance at steady-state (gDW).
+
+::: footer
+Methods
+:::
+
+## Workflow
+
+-   Growth media were based on provided growth profiles obtained experimentally
+-   Models were tuned to fit their real profiles and then sampled
+-   This cyclical workflow followed a mostly 'trial-and-error' approach that saw adjustments at each iteration
+
+![](./metropolis_template_images/workplan.png)
+
+::: footer
+Methods
+:::
+
+## Effects on community stability
+
+-   In simulations ran through FBA, across all samples, enzyme-constrained or not, there was growth in almost all media that maintained a reasonable level of organic or inorganic iron 
+-   When comparing communities of enhanced vs non-enhanced models it was observed that under SteadyCom only enhanced communities had growth in low iron conditions
+-   This further proves that enhancing the models promotes a stable consortium between all members of a community by capping the overtaking of resources by species that possess a higher rate of consumption of metabolites
+
+::: footer
+Results
+:::
+
+## *Bacteroides thetaiotaomicron* growth during colitis 
+
+-   Results in **FBA** simulations were stable across all samples and media
+-   In SteadyCom:
+    -   Only sample 2 had growth
+    -   Samples 2 and 3 were the only ones where *Bacteroides thetaiotaomicron* had an abundance bigger than 0
+    -   0.0000231 and 0.0000893 in sample 2 in media 2 and 3
+
+<!-- ![](./metropolis_template_images/results_bt_growth.png){fig-align= 'center' width=20% .lightbox} -->
+
+::: footer
+Results
+:::
+
+## *Bacteroides thetaiotaomicron* growth during colitis 
+
+-   The *B. thetaiotaomicron* can indeed in communities wwith *E. coli* under low iron conditions
+-   The extension of the model was able to capture real observed mechanisms
+
+![](./metropolis_template_images/results_bt_growth.png)
+
+::: footer
+Results
+:::
+
+## Conclusions
+
+-   A novel framework to integrate enzyme contraints in commmunity models was developed
+-   The generated models were able to attain uptake profiles similar to those observed in the lab
+-   The methodology was validated through the capturing of a published microbe-microbe interaction
+
+## The End!
+\
+Thank you for your time, and feel free to ask any questions!\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+To learn more, please refer to the GitHub repository: **[tmCOM](https://github.com/areias03/tmCOM)**
